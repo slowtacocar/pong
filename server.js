@@ -10,7 +10,7 @@ app.prepare().then(() => {
   
   const io = require('socket.io')(server)
   
-  server.listen(80)
+  server.listen(8080)
   
   const rooms = {}
   
