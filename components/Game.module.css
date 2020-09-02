@@ -1,0 +1,22 @@
+.game {
+  width: 500px;
+  height: 500px;
+  border: 1px solid rgb(255, 255, 255);
+}
+
+.paddle {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: 10px;
+  height: 50px;
+  background: rgb(255, 255, 255);
+}
+
+.ball {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: 30px;
+  height: 30px;
+  background: rgb(255, 255, 255);
+  border-radius: 15px;
+}

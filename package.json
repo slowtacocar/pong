@@ -1,0 +1,27 @@
+{
+  "name": "pong",
+  "version": "1.0.0",
+  "description": "An online pong game with next.js and socket.io",
+  "main": "server.js",
+  "scripts": {
+    "dev": "node server.js",
+    "build": "next build",
+    "start": "NODE_ENV=production node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/slowtacocar/pong.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/slowtacocar/pong/issues"
+  },
+  "homepage": "https://github.com/slowtacocar/pong#readme",
+  "dependencies": {
+    "next": "^9.5.2",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "socket.io": "^2.3.0"
+  }
+}
