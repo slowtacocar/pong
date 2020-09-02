@@ -26,7 +26,7 @@ app.prepare().then(() => {
       rooms[room] = {}
       rooms[room].vector = {
         'x': 1,
-        'y': 1
+        'y': 0
       }
       rooms[room].ball = {
         'x': 250,
@@ -45,7 +45,7 @@ app.prepare().then(() => {
 
         rooms[room].vector = {
           'x': 1,
-          'y': 1
+          'y': 0
         }
         rooms[room].ball = {
           'x': 250,
@@ -80,10 +80,16 @@ app.prepare().then(() => {
           rooms[room].vector.y *= -1
         }
         if (rooms[room].vector.x < 0 && rooms[room].ball.x - 15 <= rooms[room].paddle1.x + 5 && rooms[room].ball.x - 15 >= rooms[room].paddle1.x - 5 && rooms[room].ball.y <= rooms[room].paddle1.y + 25 && rooms[room].ball.y >= rooms[room].paddle1.y - 25) {
-          rooms[room].vector.x *= -1
+          rooms[room].vector = {
+            'x': Math.abs(Math.cos((rooms[room].paddle1.y - rooms[room].ball.y) / 20)),
+            'y': Math.abs(Math.sin((rooms[room].paddle1.y - rooms[room].ball.y) / 20))
+          }
         }
         if (rooms[room].vector.x > 0 && rooms[room].ball.x + 15 >= rooms[room].paddle2.x - 5 && rooms[room].ball.x + 15 <= rooms[room].paddle2.x + 5 && rooms[room].ball.y <= rooms[room].paddle2.y + 25 && rooms[room].ball.y >= rooms[room].paddle2.y - 25) {
-          rooms[room].vector.x *= -1
+          rooms[room].vector = {
+            'x': Math.cos(Math.abs(rooms[room].paddle2.y - rooms[room].ball.y) / 20 + Math.PI),
+            'y': Math.sin(Math.abs(rooms[room].paddle2.y - rooms[room].ball.y) / 20 + Math.PI)
+          }
         }
         
         io.to(room).emit('ball', rooms[room].ball)
