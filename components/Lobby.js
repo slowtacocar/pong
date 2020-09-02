@@ -3,6 +3,12 @@ import styles from './Lobby.module.css';
 export default function Lobby(props) {
   const [component, setComponent] = React.useState()
 
+  React.useEffect(() => {
+    if (!component && props.room) {
+      document.lobby.submit.click();
+    }
+  });
+
   function handleChange(event) {
     event.target.setCustomValidity('')
   }
@@ -26,10 +32,10 @@ export default function Lobby(props) {
       <p>
         Choose any room name to be added to your own personal game of Pong
       </p>
-      <form className={styles.form} onSubmit={handleSubmit}>
+      <form className={styles.form} onSubmit={handleSubmit} name="lobby">
         <label>
           Room
-          <input type='text' name='room' onChange={handleChange} />
+          <input type='text' name='room' onChange={handleChange} defaultValue={props.room} />
         </label>
         <button type='submit' name='submit'>Submit</button>
       </form>
