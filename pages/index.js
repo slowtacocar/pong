@@ -9,7 +9,11 @@ export default function Home() {
   return (
     <Lobby socket={socket}>
       {
-        (component) => component === "player1" ? <Player1 socket={socket} /> : component === "player2" ? <Player2 socket={socket} /> : null
+        (component) => component === "player1" ?
+          <Player1 socket={socket} /> :
+          component === "player2" ?
+            <Player2 socket={socket} /> :
+            null
       }
     </Lobby>
   );
