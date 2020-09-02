@@ -8,10 +8,10 @@ const handle = app.getRequestHandler()
 
 app.prepare().then(() => {
   const server = createServer(handle)
-  
+
   const io = require('socket.io')(server)
   const gameServer = new GameServer(io)
   gameServer.start()
-  
-  server.listen(80)
+
+  server.listen(process.env.PORT || 3000)
 })
