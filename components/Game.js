@@ -1,54 +1,68 @@
 import styles from "./Game.module.css";
 
 export default function Game(props) {
-  const [paddle1, setPaddle1] = React.useState({
-    "x": 20,
-    "y": 250
-  });
-  const [paddle2, setPaddle2] = React.useState({
-    "x": 480,
-    "y": 250
-  });
+  const paddles = {
+    "paddle1": {
+      "x": 20,
+      "y": 250
+    },
+    "paddle2": {
+      "x": 480,
+      "y": 250
+    }
+  };
+
+  const remoteName = props.name === "paddle1" ? "paddle2" : "paddle1";
+
+  const [thisPaddle, setThisPaddle] = React.useState(paddles[props.name]);
+  const [remotePaddle, setRemotePaddle] = React.useState(paddles[remoteName]);
   const [ball, setBall] = React.useState({
     "x": 250,
     "y": 250
   });
-  
+
   React.useEffect(() => {
-    function handlePaddle1(data) {
-      setPaddle1(data);
+    function handleRemotePaddle(data) {
+      setRemotePaddle(data);
     }
 
-    props.socket.on("paddle1", handlePaddle1);
-    
-    function handlePaddle2(data) {
-      setPaddle2(data);
-    }
-    
-    props.socket.on("paddle2", handlePaddle2);
-    
+    props.socket.on(remoteName, handleRemotePaddle);
+
     function handleBall(data) {
       setBall(data);
     }
-    
+
     props.socket.on("ball", handleBall);
-    
+
     return () => {
-      props.socket.removeListener("paddle1", handlePaddle1);
-      props.socket.removeListener("paddle2", handlePaddle2);
+      props.socket.removeListener(remoteName, handleRemotePaddle);
       props.socket.removeListener("ball", handleBall);
     };
   }, []);
-  
+
+  function handleMouseMove(event) {
+    event.persist();
+
+    props.socket.emit(props.name, {
+      "x": event.clientX,
+      "y": event.clientY
+    });
+
+    setThisPaddle((thisPaddle) => ({
+      "x": thisPaddle.x,
+      "y": Math.min(475, Math.max(25, event.clientY))
+    }))
+  }
+
   return (
-    <div className={styles.game}>
+    <div className={styles.game} onMouseMove={handleMouseMove}>
       <div className={styles.paddle} style={{
-        "top": paddle1.y,
-        "left": paddle1.x
+        "top": thisPaddle.y,
+        "left": thisPaddle.x
       }} />
       <div className={styles.paddle} style={{
-        "top": paddle2.y,
-        "left": paddle2.x
+        "top": remotePaddle.y,
+        "left": remotePaddle.x
       }} />
       <div className={styles.ball} style={{
         "top": ball.y,
