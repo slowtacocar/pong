@@ -9,6 +9,7 @@ export default function Lobby(props) {
 
   function handleSubmit(event) {
     event.preventDefault();
+    event.persist();
     props.socket.emit('join', event.target.room.value, (component) => {
       if (component) {
         setComponent(component);
