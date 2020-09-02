@@ -23,49 +23,72 @@ app.prepare().then(() => {
         clearInterval(rooms[room].interval)
       }
       
-      rooms[room] = {
-        'vector': {
+      rooms[room] = {}
+      rooms[room].vector = {
+        'x': 1,
+        'y': 1
+      }
+      rooms[room].ball = {
+        'x': 250,
+        'y': 250
+      }
+      rooms[room].paddle1 = {
+        'x': 20,
+        'y': 250
+      }
+      rooms[room].paddle2 = {
+        'x': 480,
+        'y': 250
+      }
+      rooms[room].restart = () => {
+        clearInterval(rooms[room].interval)
+
+        rooms[room].vector = {
           'x': 1,
           'y': 1
-        },
-        'ball': {
+        }
+        rooms[room].ball = {
           'x': 250,
           'y': 250
-        },
-        'paddle1': {
+        }
+        rooms[room].paddle1 = {
           'x': 20,
           'y': 250
-        },
-        'paddle2': {
+        }
+        rooms[room].paddle2 = {
           'x': 480,
           'y': 250
-        },
-        'interval': setInterval(() => {
-          rooms[room].ball.x += rooms[room].vector.x
-          rooms[room].ball.y += rooms[room].vector.y
-          
-          if (rooms[room].vector.x > 0 && rooms[room].ball.x + 15 >= 500) {
-            clearInterval(rooms[room].interval)
-          }
-          if (rooms[room].vector.y > 0 && rooms[room].ball.y + 15 >= 500) {
-            rooms[room].vector.y *= -1
-          }
-          if (rooms[room].vector.x < 0 && rooms[room].ball.x - 15 <= 0) {
-            clearInterval(rooms[room].interval)
-          }
-          if (rooms[room].vector.y < 0 && rooms[room].ball.y - 15 <= 0) {
-            rooms[room].vector.y *= -1
-          }
-          if (rooms[room].vector.x < 0 && rooms[room].ball.x - 15 <= rooms[room].paddle1.x + 5 && rooms[room].ball.x - 15 >= rooms[room].paddle1.x - 5 && rooms[room].ball.y <= rooms[room].paddle1.y + 25 && rooms[room].ball.y >= rooms[room].paddle1.y - 25) {
-            rooms[room].vector.x *= -1
-          }
-          if (rooms[room].vector.x > 0 && rooms[room].ball.x + 15 >= rooms[room].paddle2.x - 5 && rooms[room].ball.x + 15 <= rooms[room].paddle2.x + 5 && rooms[room].ball.y <= rooms[room].paddle2.y + 25 && rooms[room].ball.y >= rooms[room].paddle2.y - 25) {
-            rooms[room].vector.x *= -1
-          }
-          
-          io.to(room).emit('ball', rooms[room].ball)
-        }, 5)
+        }
+        setTimeout(() => {
+          rooms[room].interval = setInterval(rooms[room].loop, 5)
+        }, 1000)
       }
+      rooms[room].loop = () => {
+        rooms[room].ball.x += rooms[room].vector.x
+        rooms[room].ball.y += rooms[room].vector.y
+        
+        if (rooms[room].vector.x > 0 && rooms[room].ball.x + 15 >= 500) {
+          rooms[room].restart();
+        }
+        if (rooms[room].vector.y > 0 && rooms[room].ball.y + 15 >= 500) {
+          rooms[room].vector.y *= -1
+        }
+        if (rooms[room].vector.x < 0 && rooms[room].ball.x - 15 <= 0) {
+          rooms[room].restart();
+        }
+        if (rooms[room].vector.y < 0 && rooms[room].ball.y - 15 <= 0) {
+          rooms[room].vector.y *= -1
+        }
+        if (rooms[room].vector.x < 0 && rooms[room].ball.x - 15 <= rooms[room].paddle1.x + 5 && rooms[room].ball.x - 15 >= rooms[room].paddle1.x - 5 && rooms[room].ball.y <= rooms[room].paddle1.y + 25 && rooms[room].ball.y >= rooms[room].paddle1.y - 25) {
+          rooms[room].vector.x *= -1
+        }
+        if (rooms[room].vector.x > 0 && rooms[room].ball.x + 15 >= rooms[room].paddle2.x - 5 && rooms[room].ball.x + 15 <= rooms[room].paddle2.x + 5 && rooms[room].ball.y <= rooms[room].paddle2.y + 25 && rooms[room].ball.y >= rooms[room].paddle2.y - 25) {
+          rooms[room].vector.x *= -1
+        }
+        
+        io.to(room).emit('ball', rooms[room].ball)
+      }
+      rooms[room].interval = setInterval(rooms[room].loop, 5)
       
       socket.on('paddle1', (data) => {
         rooms[room].paddle1.y = Math.min(475, Math.max(25, data.y))
