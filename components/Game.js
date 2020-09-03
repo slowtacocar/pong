@@ -43,11 +43,12 @@ export default function Game(props) {
   }, []);
 
   function handleMouseMove(event) {
+    console.log(event)
     event.persist();
 
     let mouse = svg.current.createSVGPoint()
-    mouse.x = event.clientX
-    mouse.y = event.clientY
+    mouse.x = event.clientX || event.touches[0].clientX
+    mouse.y = event.clientY || event.touches[0].clientY
 
     mouse = mouse.matrixTransform(svg.current.getScreenCTM().inverse())
 
@@ -63,7 +64,7 @@ export default function Game(props) {
   }
 
   return (
-    <div onMouseMove={handleMouseMove}>
+    <div className={styles.container} onMouseMove={handleMouseMove} onTouchMove={handleMouseMove}>
       <svg className={styles.svg} viewBox="-1 -1 502 502" ref={svg}>
         <rect width="501" height="501" x="-0.5" y="-0.5" stroke="rgb(255, 255, 255)" />
         <rect width="10" height="50" x={thisPaddle.x - 5} y={thisPaddle.y - 25} fill="rgb(255, 255, 255)" />
