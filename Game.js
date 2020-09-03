@@ -1,7 +1,5 @@
 const Player = require('./Player')
 
-const SPEED = 3
-
 module.exports = class Game {
   constructor(room, io) {
     this.room = room
@@ -13,6 +11,7 @@ module.exports = class Game {
   loop() {
     this.ball.x += this.vector.x
     this.ball.y += this.vector.y
+    this.speed += 0.001;
 
     if (this.vector.x > 0 && this.ball.x + 15 >= 500) {
       this.restart();
@@ -28,14 +27,14 @@ module.exports = class Game {
     }
     if (this.vector.x < 0 && this.ball.x - 15 <= this.player1.paddle.x + 5 && this.ball.x - 15 >= this.player1.paddle.x - 5 && this.ball.y <= this.player1.paddle.y + 25 && this.ball.y >= this.player1.paddle.y - 25) {
       this.vector = {
-        'x': Math.cos((this.player1.paddle.y - this.ball.y) / -20) * SPEED,
-        'y': Math.sin((this.player1.paddle.y - this.ball.y) / -20) * SPEED
+        'x': Math.cos((this.player1.paddle.y - this.ball.y) / -20) * this.speed,
+        'y': Math.sin((this.player1.paddle.y - this.ball.y) / -20) * this.speed
       }
     }
     if (this.vector.x > 0 && this.ball.x + 15 >= this.player2.paddle.x - 5 && this.ball.x + 15 <= this.player2.paddle.x + 5 && this.ball.y <= this.player2.paddle.y + 25 && this.ball.y >= this.player2.paddle.y - 25) {
       this.vector = {
-        'x': Math.cos((this.player2.paddle.y - this.ball.y) / 20 + Math.PI) * SPEED,
-        'y': Math.sin((this.player2.paddle.y - this.ball.y) / 20 + Math.PI) * SPEED
+        'x': Math.cos((this.player2.paddle.y - this.ball.y) / 20 + Math.PI) * this.speed,
+        'y': Math.sin((this.player2.paddle.y - this.ball.y) / 20 + Math.PI) * this.speed
       }
     }
 
@@ -48,8 +47,10 @@ module.exports = class Game {
 
   start() {
     if (this.player1 && this.player2) {
+      this.speed = 3
+
       this.vector = {
-        'x': SPEED,
+        'x': this.speed,
         'y': 0
       }
       this.ball = {
