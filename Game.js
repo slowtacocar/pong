@@ -13,29 +13,21 @@ module.exports = class Game {
     this.ball.y += this.vector.y
     this.speed += 0.001;
 
-    if (this.vector.x > 0 && this.ball.x + 15 >= 500) {
-      this.restart();
-    }
-    if (this.vector.y > 0 && this.ball.y + 15 >= 500) {
+    if ((this.vector.y > 0 && this.ball.y + 15 >= 500) || (this.vector.y < 0 && this.ball.y - 15 <= 0)) {
       this.vector.y *= -1
     }
-    if (this.vector.x < 0 && this.ball.x - 15 <= 0) {
-      this.restart();
-    }
-    if (this.vector.y < 0 && this.ball.y - 15 <= 0) {
-      this.vector.y *= -1
-    }
-    if (this.vector.x < 0 && this.ball.x - 15 <= this.player1.paddle.x + 5 && this.ball.x - 15 >= this.player1.paddle.x - 5 && this.ball.y <= this.player1.paddle.y + 25 && this.ball.y >= this.player1.paddle.y - 25) {
+    if (this.vector.x < 0 && this.ball.x - 15 <= this.player1.paddle.x + 5 && this.ball.x - 15 >= this.player1.paddle.x - 5 && this.ball.y <= this.player1.paddle.y + 25) {
       this.vector = {
         'x': Math.cos((this.player1.paddle.y - this.ball.y) / -20) * this.speed,
         'y': Math.sin((this.player1.paddle.y - this.ball.y) / -20) * this.speed
       }
-    }
-    if (this.vector.x > 0 && this.ball.x + 15 >= this.player2.paddle.x - 5 && this.ball.x + 15 <= this.player2.paddle.x + 5 && this.ball.y <= this.player2.paddle.y + 25 && this.ball.y >= this.player2.paddle.y - 25) {
+    } else if (this.vector.x > 0 && this.ball.x + 15 >= this.player2.paddle.x - 5 && this.ball.x + 15 <= this.player2.paddle.x + 5 && this.ball.y <= this.player2.paddle.y + 25) {
       this.vector = {
         'x': Math.cos((this.player2.paddle.y - this.ball.y) / 20 + Math.PI) * this.speed,
         'y': Math.sin((this.player2.paddle.y - this.ball.y) / 20 + Math.PI) * this.speed
       }
+    } else if ((this.vector.x < 0 && this.ball.x - 15 <= 0) || (this.vector.x > 0 && this.ball.x + 15 >= 500)) {
+      this.restart();
     }
 
     this.io.to(this.room).emit('ball', this.ball)
