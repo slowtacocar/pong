@@ -16,12 +16,12 @@ module.exports = class Game {
     if ((this.vector.y > 0 && this.ball.y + 15 >= 500) || (this.vector.y < 0 && this.ball.y - 15 <= 0)) {
       this.vector.y *= -1
     }
-    if (this.vector.x < 0 && this.ball.x - 15 <= this.player1.paddle.x + 5 && this.ball.x - 15 >= this.player1.paddle.x - 5 && this.ball.y <= this.player1.paddle.y + 25) {
+    if (this.vector.x < 0 && this.ball.x - 15 <= this.player1.paddle.x + 5 && this.ball.y <= this.player1.paddle.y + 25 && this.ball.y >= this.player1.paddle.y - 25) {
       this.vector = {
         'x': Math.cos((this.player1.paddle.y - this.ball.y) / -20) * this.speed,
         'y': Math.sin((this.player1.paddle.y - this.ball.y) / -20) * this.speed
       }
-    } else if (this.vector.x > 0 && this.ball.x + 15 >= this.player2.paddle.x - 5 && this.ball.x + 15 <= this.player2.paddle.x + 5 && this.ball.y <= this.player2.paddle.y + 25) {
+    } else if (this.vector.x > 0 && this.ball.x + 15 >= this.player2.paddle.x - 5 && this.ball.y <= this.player2.paddle.y + 25 && this.ball.y >= this.player2.paddle.y - 25) {
       this.vector = {
         'x': Math.cos((this.player2.paddle.y - this.ball.y) / 20 + Math.PI) * this.speed,
         'y': Math.sin((this.player2.paddle.y - this.ball.y) / 20 + Math.PI) * this.speed
