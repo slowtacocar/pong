@@ -43,7 +43,6 @@ export default function Game(props) {
   }, []);
 
   function handleMouseMove(event) {
-    console.log(event)
     event.persist();
 
     let mouse = svg.current.createSVGPoint()
