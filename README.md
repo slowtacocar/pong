@@ -1,2 +1,3 @@
 # pong
- An online pong game with next.js and socket.io
+
+An online pong game with next.js and socket.io
