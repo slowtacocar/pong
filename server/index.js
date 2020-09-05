@@ -2,7 +2,7 @@ const express = require("express");
 const http = require("http");
 const next = require("next");
 const Server = require("socket.io");
-const GameServer = require("./server/GameServer");
+const GameServer = require("./GameServer");
 
 const port = process.env.PORT || 3000;
 const dev = process.env.NODE_ENV !== "production";

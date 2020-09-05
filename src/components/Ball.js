@@ -1,4 +1,6 @@
-export default function Ball(props) {
+import PropTypes from "prop-types";
+
+function Ball(props) {
   const [ball, setBall] = React.useState({
     x: 250,
     y: 250,
@@ -18,3 +20,9 @@ export default function Ball(props) {
 
   return <circle cx={ball.x} cy={ball.y} r="15" fill="rgb(255, 255, 255)" />;
 }
+
+Ball.propTypes = {
+  socket: PropTypes.object.isRequired,
+};
+
+export default Ball;

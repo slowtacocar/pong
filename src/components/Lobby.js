@@ -1,7 +1,8 @@
+import PropTypes from "prop-types";
 import styles from "./Lobby.module.css";
 import Game from "./Game";
 
-export default function Lobby(props) {
+function Lobby(props) {
   const [room, setRoom] = React.useState(props.room);
   const [component, setComponent] = React.useState();
 
@@ -55,3 +56,10 @@ export default function Lobby(props) {
     </div>
   );
 }
+
+Lobby.propTypes = {
+  socket: PropTypes.object.isRequired,
+  room: PropTypes.string.isRequired,
+};
+
+export default Lobby;

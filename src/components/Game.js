@@ -1,10 +1,11 @@
+import PropTypes from "prop-types";
 import styles from "./Game.module.css";
 import Ball from "./Ball";
 import Paddle from "./Paddle";
 import SocketPaddle from "./SocketPaddle";
 import Score from "./Score";
 
-export default function Game(props) {
+function Game(props) {
   const svg = React.useRef();
 
   const [y, setY] = React.useState(250);
@@ -64,3 +65,10 @@ export default function Game(props) {
     </div>
   );
 }
+
+Game.propTypes = {
+  socket: PropTypes.object.isRequired,
+  name: PropTypes.string.isRequired,
+};
+
+export default Game;

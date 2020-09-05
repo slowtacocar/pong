@@ -1,4 +1,6 @@
-export default function Score(props) {
+import PropTypes from "prop-types";
+
+function Score(props) {
   const [score, setScore] = React.useState(0);
 
   React.useEffect(() => {
@@ -26,3 +28,10 @@ export default function Score(props) {
     </text>
   );
 }
+
+Score.propTypes = {
+  name: PropTypes.string.isRequired,
+  socket: PropTypes.object.isRequired,
+};
+
+export default Score;
