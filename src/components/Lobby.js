@@ -59,7 +59,7 @@ function Lobby(props) {
 
 Lobby.propTypes = {
   socket: PropTypes.object.isRequired,
-  room: PropTypes.string.isRequired,
+  room: PropTypes.string,
 };
 
 export default Lobby;
