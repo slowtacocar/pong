@@ -4,6 +4,7 @@ module.exports = class Player {
     this.io = io;
     this.socket = socket;
     this.paddleName = paddleName;
+    this.score = 0;
 
     this.y = 250;
 

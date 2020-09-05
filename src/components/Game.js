@@ -2,6 +2,7 @@ import styles from "./Game.module.css";
 import Ball from "./Ball";
 import Paddle from "./Paddle";
 import SocketPaddle from "./SocketPaddle";
+import Score from "./Score";
 
 export default function Game(props) {
   const svg = React.useRef();
@@ -25,7 +26,7 @@ export default function Game(props) {
 
   function handleTouchMove(event) {
     const [touch] = event.touches;
-    handleMove(touch.eventY);
+    handleMove(touch.clientY);
   }
 
   return (
@@ -42,6 +43,14 @@ export default function Game(props) {
           y="-0.5"
           stroke="rgb(255, 255, 255)"
         />
+        <line
+          x1="250"
+          y1="0"
+          x2="250"
+          y2="500"
+          stroke="rgb(255, 255, 255)"
+          strokeDasharray="5"
+        />
         <Paddle y={y} x={props.name === "player1" ? 15 : 475} />
         <SocketPaddle
           x={props.name === "player2" ? 15 : 475}
@@ -49,6 +58,8 @@ export default function Game(props) {
           name={props.name === "player1" ? "player2" : "player1"}
         />
         <Ball socket={props.socket} />
+        <Score socket={props.socket} name="score1" />
+        <Score socket={props.socket} name="score2" />
       </svg>
     </div>
   );

@@ -39,10 +39,13 @@ module.exports = class Game {
         x: Math.cos((this.player2.y - this.ball.y) / 20 + Math.PI) * this.speed,
         y: Math.sin((this.player2.y - this.ball.y) / 20 + Math.PI) * this.speed,
       };
-    } else if (
-      (this.vector.x < 0 && this.ball.x - 15 <= 0) ||
-      (this.vector.x > 0 && this.ball.x + 15 >= 500)
-    ) {
+    } else if (this.vector.x < 0 && this.ball.x - 15 <= 0) {
+      this.player2.score++;
+      this.io.to(this.room).emit("score2", this.player2.score);
+      this.restart();
+    } else if (this.vector.x > 0 && this.ball.x + 15 >= 500) {
+      this.player1.score++;
+      this.io.to(this.room).emit("score1", this.player1.score);
       this.restart();
     }
 
