@@ -8,6 +8,7 @@ function Ball(props) {
 
   React.useEffect(() => {
     function handleBall(data) {
+      props.onFrame();
       setBall(data);
     }
 
@@ -16,13 +17,14 @@ function Ball(props) {
     return () => {
       props.socket.removeListener("ball", handleBall);
     };
-  }, [props.socket]);
+  }, [props]);
 
   return <circle cx={ball.x} cy={ball.y} r="15" fill="rgb(255, 255, 255)" />;
 }
 
 Ball.propTypes = {
   socket: PropTypes.object.isRequired,
+  onFrame: PropTypes.func.isRequired,
 };
 
 export default Ball;

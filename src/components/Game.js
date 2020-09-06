@@ -16,8 +16,6 @@ function Game(props) {
 
     const { y } = point.matrixTransform(svg.current.getScreenCTM().inverse());
 
-    props.socket.emit(props.name, y);
-
     setY(y);
   }
 
@@ -28,6 +26,10 @@ function Game(props) {
   function handleTouchMove(event) {
     const [touch] = event.touches;
     handleMove(touch.clientY);
+  }
+
+  function handleFrame() {
+    props.socket.emit(props.name, y);
   }
 
   return (
@@ -58,7 +60,7 @@ function Game(props) {
           socket={props.socket}
           name={props.name === "player1" ? "player2" : "player1"}
         />
-        <Ball socket={props.socket} />
+        <Ball socket={props.socket} onFrame={handleFrame} />
         <Score socket={props.socket} name="score1" />
         <Score socket={props.socket} name="score2" />
       </svg>

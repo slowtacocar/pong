@@ -22,7 +22,7 @@ module.exports = class Game {
       this.player2.y = this.ball.y + this.player2.offset;
       this.io.to(this.room).emit("player2", this.player2.y);
     }
-    this.speed += 0.001;
+    this.speed += 0.002;
 
     if (
       (this.vector.y > 0 && this.ball.y + 15 >= 500) ||
@@ -69,7 +69,7 @@ module.exports = class Game {
 
   start() {
     if (this.player1 && this.player2) {
-      this.speed = 3;
+      this.speed = 6;
 
       const angle = Math.random() * 2 * Math.PI;
       this.vector = {
@@ -81,7 +81,7 @@ module.exports = class Game {
         y: 250,
       };
 
-      this.interval = setInterval(this.loop, 50 / 3);
+      this.interval = setInterval(this.loop, 100 / 3);
     }
   }
 
