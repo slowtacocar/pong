@@ -11,7 +11,7 @@ module.exports = class Player {
     this.socket.join(this.room);
 
     this.socket.on(this.paddleName, (y) => {
-      this.y = y;
+      this.y = Math.min(475, Math.max(25, y));
       this.io.to(this.room).emit(this.paddleName, this.y);
     });
   }

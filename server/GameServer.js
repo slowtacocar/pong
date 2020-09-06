@@ -21,6 +21,12 @@ module.exports = class GameServer {
 
         ack(component);
       });
+      socket.on("play", (ack) => {
+        this.games[socket.id] = new Game(socket.id, this.io);
+        this.games[socket.id].addOnlyPlayer(socket);
+
+        ack("player1");
+      });
     });
   }
 };

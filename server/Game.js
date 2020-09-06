@@ -11,6 +11,17 @@ module.exports = class Game {
   loop() {
     this.ball.x += this.vector.x;
     this.ball.y += this.vector.y;
+    if (!this.player2.socket) {
+      this.player2.offsetInc *=
+        this.player2.offset >= 25 + this.speed
+          ? -1
+          : this.player2.offset <= -25 - this.speed
+          ? -1
+          : 1;
+      this.player2.offset += this.player2.offsetInc;
+      this.player2.y = this.ball.y + this.player2.offset;
+      this.io.to(this.room).emit("player2", this.player2.y);
+    }
     this.speed += 0.001;
 
     if (
@@ -60,9 +71,10 @@ module.exports = class Game {
     if (this.player1 && this.player2) {
       this.speed = 3;
 
+      const angle = Math.random() * 2 * Math.PI;
       this.vector = {
-        x: this.speed,
-        y: 0,
+        x: Math.cos(angle) * this.speed,
+        y: Math.sin(angle) * this.speed,
       };
       this.ball = {
         x: 250,
@@ -107,5 +119,20 @@ module.exports = class Game {
     });
 
     return "player1";
+  }
+
+  addOnlyPlayer(socket) {
+    this.player1 = new Player(this.room, this.io, socket, "player1");
+    this.player2 = {
+      score: 0,
+      y: 250,
+      offsetInc: 1,
+      offset: 0,
+    };
+    this.start();
+
+    socket.on("disconnect", () => {
+      this.stop();
+    });
   }
 };

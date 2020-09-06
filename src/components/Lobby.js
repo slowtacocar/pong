@@ -33,6 +33,10 @@ function Lobby(props) {
     setRoom(event.target.room.value);
   }
 
+  function handleClick() {
+    props.socket.emit("play", setComponent);
+  }
+
   return component ? (
     <Game name={component} socket={props.socket} />
   ) : (
@@ -53,6 +57,9 @@ function Lobby(props) {
           Submit
         </button>
       </form>
+      <button className={styles.button} type="button" onClick={handleClick}>
+        Play the Computer
+      </button>
     </div>
   );
 }
