@@ -41,8 +41,11 @@ function Lobby(props) {
     <Game name={component} socket={props.socket} />
   ) : (
     <div className={styles.lobby}>
-      <h1>Welcome!</h1>
-      <p>Choose any room name to be added to your own personal game of Pong</p>
+      <h1 className={styles.heading}>Pong</h1>
+      <p className={styles.par}>
+        Choose any room name to be added to your own personal game of Pong, or
+        click &ldquo;Play the Computer&rdquo; to enter a single-player game
+      </p>
       <form
         className={styles.form}
         onSubmit={handleSubmit}
@@ -57,7 +60,8 @@ function Lobby(props) {
           Submit
         </button>
       </form>
-      <button className={styles.button} type="button" onClick={handleClick}>
+      <p className={styles.or}>Or...</p>
+      <button type="button" onClick={handleClick}>
         Play the Computer
       </button>
     </div>

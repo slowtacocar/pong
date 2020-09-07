@@ -1,6 +1,6 @@
 body,
 html,
-div {
+#__next {
   height: 100%;
 }
 
@@ -9,4 +9,33 @@ body {
   background: rgb(0, 0, 0);
   color: white;
   font-family: system-ui;
+}
+
+input,
+select {
+  padding: 0.6rem;
+  border-radius: 0.4rem;
+  border: 1px solid rgb(204, 204, 204);
+  background: rgb(255, 255, 255);
+  font: inherit;
+}
+
+label,
+form {
+  display: flex;
+  gap: 0.8rem;
+  align-items: center;
+}
+
+button {
+  font: inherit;
+  padding: 0.6rem;
+  border-radius: 0.4rem;
+  background: rgb(238, 238, 238);
+  border: none;
+  transition: background 0.15s;
+}
+
+button:hover {
+  background: rgb(214, 214, 214);
 }

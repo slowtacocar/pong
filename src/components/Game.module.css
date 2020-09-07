@@ -5,4 +5,5 @@
 
 .container {
   touch-action: none;
+  height: 100%;
 }
