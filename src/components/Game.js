@@ -10,13 +10,17 @@ function Game(props) {
 
   const [y, setY] = React.useState(250);
 
+  let mouseY = y;
+
+  React.useEffect(() => {
+    props.socket.emit(props.name, y);
+  }, [y, props.socket, props.name]);
+
   function handleMove(clientY) {
     let point = svg.current.createSVGPoint();
     point.y = clientY;
 
-    const { y } = point.matrixTransform(svg.current.getScreenCTM().inverse());
-
-    setY(y);
+    mouseY = point.matrixTransform(svg.current.getScreenCTM().inverse()).y;
   }
 
   function handleMouseMove(event) {
@@ -29,7 +33,7 @@ function Game(props) {
   }
 
   function handleFrame() {
-    props.socket.emit(props.name, y);
+    setY(mouseY);
   }
 
   return (
