@@ -1,7 +1,7 @@
 runtime: nodejs
 env: flex
 
-manual_scaling:
+basic_scaling:
   instances: 1
 
 network:
