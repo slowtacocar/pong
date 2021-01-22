@@ -2,7 +2,7 @@ runtime: nodejs
 env: flex
 
 basic_scaling:
-  instances: 1
+  max_instances: 1
 
 network:
   session_affinity: true
