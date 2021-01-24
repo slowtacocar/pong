@@ -46,6 +46,10 @@ function Lobby(props) {
         Choose any room name to be added to your own personal game of Pong, or
         click &ldquo;Play the Computer&rdquo; to enter a single-player game
       </p>
+      <p className={styles.par}>
+        Pong is currently using HTTP polling to reduce server costs. Expect some
+        lag.
+      </p>
       <form
         className={styles.form}
         onSubmit={handleSubmit}
