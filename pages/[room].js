@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import io from "socket.io-client";
 import Lobby from "../components/Lobby";
 
-const socket = io("https://pong-server-slowtacocar.herokuapp.com");
+const socket = io();
 
 export default function Home() {
   const router = useRouter();
