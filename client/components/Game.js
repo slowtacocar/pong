@@ -1,5 +1,4 @@
-import PropTypes from "prop-types";
-import styles from "./Game.module.css";
+import styles from "../styles/Game.module.css";
 import Ball from "./Ball";
 import Paddle from "./Paddle";
 import SocketPaddle from "./SocketPaddle";
@@ -71,10 +70,5 @@ function Game(props) {
     </div>
   );
 }
-
-Game.propTypes = {
-  socket: PropTypes.object.isRequired,
-  name: PropTypes.string.isRequired,
-};
 
 export default Game;

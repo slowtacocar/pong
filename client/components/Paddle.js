@@ -1,5 +1,3 @@
-import PropTypes from "prop-types";
-
 function Paddle(props) {
   return (
     <rect
@@ -11,10 +9,5 @@ function Paddle(props) {
     />
   );
 }
-
-Paddle.propTypes = {
-  x: PropTypes.number.isRequired,
-  y: PropTypes.number.isRequired,
-};
 
 export default Paddle;

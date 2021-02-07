@@ -1,5 +1,4 @@
-import PropTypes from "prop-types";
-import styles from "./Lobby.module.css";
+import styles from "../styles/Lobby.module.css";
 import Game from "./Game";
 
 function Lobby(props) {
@@ -71,10 +70,5 @@ function Lobby(props) {
     </div>
   );
 }
-
-Lobby.propTypes = {
-  socket: PropTypes.object.isRequired,
-  room: PropTypes.string,
-};
 
 export default Lobby;
