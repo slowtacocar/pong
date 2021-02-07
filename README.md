@@ -1,6 +1,6 @@
 # pong
 
-An online pong game with next.js and socket.io
+An online pong game with socket.io
 
 Visit https://pong.slowtacocar.com/ and have fun!
 
