@@ -12,10 +12,14 @@ module.exports = class Game {
     this.ball.x += this.vector.x;
     this.ball.y += this.vector.y;
     if (!this.player2.socket) {
+      const limits =
+        1.5 *
+        (25 + this.speed) *
+        Math.atan2(Math.abs(this.vector.y), Math.abs(this.vector.x));
       this.player2.offsetInc =
-        this.player2.offset >= 25 + this.speed
+        this.player2.offset >= limits
           ? -1
-          : this.player2.offset <= -25 - this.speed
+          : this.player2.offset <= -limits
           ? 1
           : this.player2.offsetInc;
       this.player2.offset += this.player2.offsetInc;
