@@ -2,7 +2,6 @@
   "name": "pong",
   "version": "0.1.0",
   "private": true,
-  "main": "server/index.js",
   "dependencies": {
     "express": "^4.17.1",
     "socket.io": "^2.3.0"
@@ -18,6 +17,9 @@
       "browser": true,
       "node": true
     }
+  },
+  "scripts": {
+    "start": "node server/index.js"
   },
   "devDependencies": {
     "eslint": "^7.19.0",
