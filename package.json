@@ -2,34 +2,25 @@
   "name": "pong",
   "version": "0.1.0",
   "private": true,
-  "scripts": {
-    "dev": "node server/index.js",
-    "build": "next build",
-    "start": "NODE_ENV=production node server/index.js"
-  },
+  "main": "server/index.js",
   "dependencies": {
     "express": "^4.17.1",
-    "next": "^9.5.2",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
     "socket.io": "^2.3.0"
   },
   "eslintConfig": {
     "extends": [
-      "react-app"
+      "eslint:recommended",
+      "plugin:import/errors",
+      "plugin:import/warnings"
     ],
-    "globals": {
-      "React": "readonly"
+    "env": {
+      "es6": true,
+      "browser": true,
+      "node": true
     }
   },
   "devDependencies": {
-    "babel-eslint": "^10.1.0",
     "eslint": "^7.19.0",
-    "eslint-config-react-app": "^6.0.0",
-    "eslint-plugin-flowtype": "^5.2.0",
-    "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-jsx-a11y": "^6.4.1",
-    "eslint-plugin-react": "^7.22.0",
-    "eslint-plugin-react-hooks": "^4.2.0"
+    "eslint-plugin-import": "^2.22.1"
   }
 }

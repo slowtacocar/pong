@@ -8,4 +8,4 @@ Game state is transferred to and from a node.js server using socket.io in real-t
 
 # Building Instructions
 
-Run `npm install` to install all dependencies. Then, run `npm run dev` to start a development server or `npm start` for a production server.
+Run `npm install` to install all dependencies. Then, run `npm start` for a server.
