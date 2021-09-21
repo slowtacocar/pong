@@ -131,7 +131,6 @@ function frame() {
 
     const s = s0 + t * 0.000002;
     const ballX = ballX0 + t * ballDx0 * s;
-    console.log(ballY0 + t * ballDy0 * s - 15);
     const ballY =
       485 -
       Math.abs(((((ballY0 + t * ballDy0 * s - 15) % 940) + 940) % 940) - 470);
