@@ -1,4 +1,4 @@
-const socket = new WebSocket("ws://localhost:3000");
+const socket = new WebSocket("ws://pong.slowtacocar.com");
 
 const lobby = document.getElementById("lobby");
 const game = document.getElementById("game");
