@@ -108,9 +108,13 @@ form.addEventListener("submit", (event) => {
           ball.setAttribute("cy", s.y);
         });
 
-        channel.bind("client-paddle", (paddle) => {
-          otherPaddle = paddle;
+        channel.bind("client-paddle", (p) => {
+          otherPaddle = p.paddle;
         });
+
+        setInterval(() => {
+          channel.trigger("client-paddle", { paddle });
+        }, 150);
 
         const frame = () => {
           for (let i = 0; i < 2; i++) {
@@ -193,7 +197,6 @@ form.addEventListener("submit", (event) => {
           }
 
           window.requestAnimationFrame(frame);
-          channel.trigger("client-paddle", paddle);
         };
 
         window.requestAnimationFrame(frame);
