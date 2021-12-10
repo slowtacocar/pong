@@ -1,4 +1,7 @@
-const socket = new WebSocket("ws://pong.slowtacocar.com");
+var pusher = new Pusher("e5784a0e80cc5a90a123", {
+  cluster: "mt1",
+  authEndpoint: "/api/pusher/auth",
+});
 
 const lobby = document.getElementById("lobby");
 const game = document.getElementById("game");
@@ -32,11 +35,176 @@ document.getElementById("room").addEventListener("change", (event) => {
   event.target.setCustomValidity("");
 });
 
+function resetBall() {
+  const angle =
+    (Math.random() >= 0.5 ? Math.PI : 0) + Math.random() * 2.5 - 1.25;
+  const ball = {
+    dx: Math.cos(angle),
+    dy: Math.sin(angle),
+    x: 250,
+    y: 250,
+    timestamp: Date.now(),
+    s: 0.2,
+  };
+  ballDx0 = ball.dx;
+  ballDy0 = ball.dy;
+  ballX0 = ball.x;
+  ballY0 = ball.y;
+  t0 = ball.timestamp;
+  s0 = ball.s;
+  stop = false;
+  return ball;
+}
+
+function handleMove(clientY) {
+  let point = svg.createSVGPoint();
+  point.y = clientY;
+
+  paddle = Math.min(
+    475,
+    Math.max(25, point.matrixTransform(svg.getScreenCTM().inverse()).y)
+  );
+}
+
 form.addEventListener("submit", (event) => {
   event.preventDefault();
 
   if (event.target.room.value) {
-    socket.send(JSON.stringify({ room: event.target.room.value }));
+    const channel = pusher.subscribe(`presence-${event.target.room.value}`);
+    channel.bind("pusher:subscription_succeeded", (members) => {
+      console.log("success");
+      console.log(members);
+      if (members.count <= 2) {
+        playerNumber = members.count - 1;
+        if (playerNumber === 1) {
+          channel.trigger("client-ball", resetBall());
+        }
+        lobby.hidden = true;
+        game.hidden = false;
+
+        game.addEventListener("mousemove", (event) => {
+          handleMove(event.clientY);
+        });
+
+        game.addEventListener("touchmove", (event) => {
+          const [touch] = event.touches;
+          handleMove(touch.clientY);
+        });
+
+        channel.bind("client-ball", (ball) => {
+          ballDx0 = ball.dx;
+          ballDy0 = ball.dy;
+          ballX0 = ball.x;
+          ballY0 = ball.y;
+          t0 = ball.timestamp;
+          s0 = ball.s;
+          stop = false;
+        });
+
+        channel.bind("client-score", (s) => {
+          score++;
+          stop = true;
+          ball.setAttribute("cx", s.x);
+          ball.setAttribute("cy", s.y);
+        });
+
+        channel.bind("client-paddle", (paddle) => {
+          otherPaddle = paddle;
+        });
+
+        const frame = () => {
+          for (let i = 0; i < 2; i++) {
+            if (i === playerNumber) {
+              players[i].setAttribute("y", paddle - 25);
+              scores[i].textContent = score;
+            } else {
+              players[i].setAttribute("y", otherPaddle - 25);
+              scores[i].textContent = otherScore;
+            }
+          }
+
+          if (!stop) {
+            const t = Date.now() - t0;
+
+            const s = s0 + t * 0.000002;
+            const ballX = ballX0 + t * ballDx0 * s;
+            const ballY =
+              485 -
+              Math.abs(
+                ((((ballY0 + t * ballDy0 * s - 15) % 940) + 940) % 940) - 470
+              );
+
+            ball.setAttribute("cx", ballX);
+            ball.setAttribute("cy", ballY);
+
+            if (
+              playerNumber === 0 &&
+              ballDx0 < 0 &&
+              ballX - 15 <= 25 &&
+              ballY <= paddle + 25 &&
+              ballY >= paddle - 25
+            ) {
+              t0 = Date.now();
+              ballX0 = ballX;
+              ballY0 = ballY;
+              ballDx0 = Math.cos((paddle - ballY) / -20);
+              ballDy0 = Math.sin((paddle - ballY) / -20);
+              s0 = s;
+              channel.trigger("client-ball", {
+                timestamp: t0,
+                x: ballX0,
+                y: ballY0,
+                dx: ballDx0,
+                dy: ballDy0,
+                s: s0,
+              });
+            } else if (
+              playerNumber === 1 &&
+              ballDx0 > 0 &&
+              ballX + 15 >= 475 &&
+              ballY <= paddle + 25 &&
+              ballY >= paddle - 25
+            ) {
+              t0 = Date.now();
+              ballX0 = ballX;
+              ballY0 = ballY;
+              ballDx0 = Math.cos((paddle - ballY) / 20 + Math.PI);
+              ballDy0 = Math.sin((paddle - ballY) / 20 + Math.PI);
+              s0 = s;
+              channel.trigger("client-ball", {
+                timestamp: t0,
+                x: ballX0,
+                y: ballY0,
+                dx: ballDx0,
+                dy: ballDy0,
+                s: s0,
+              });
+            } else if (
+              (playerNumber === 0 && ballDx0 < 0 && ballX - 15 <= 0) ||
+              (playerNumber === 1 && ballDx0 > 0 && ballX + 15 >= 500)
+            ) {
+              otherScore++;
+              channel.trigger("client-score", { x: ballX, y: ballY });
+              setTimeout(() => {
+                channel.trigger("client-ball", resetBall());
+              }, 1000);
+              stop = true;
+            }
+          }
+
+          window.requestAnimationFrame(frame);
+          channel.trigger("client-paddle", paddle);
+        };
+
+        window.requestAnimationFrame(frame);
+      } else {
+        form.room.setCustomValidity("Room is full");
+        submit.click();
+      }
+    });
+    channel.bind("pusher:subscription_error", (error) => {
+      throw error;
+    });
   }
 });
 
@@ -63,141 +231,3 @@ document.getElementById("button").addEventListener("click", () => {
   }
   */
 });
-
-game.addEventListener("mousemove", (event) => {
-  handleMove(event.clientY);
-});
-
-game.addEventListener("touchmove", (event) => {
-  const [touch] = event.touches;
-  handleMove(touch.clientY);
-});
-
-socket.addEventListener("message", (m) => {
-  const message = JSON.parse(m.data);
-
-  if (message.playerNumber === null) {
-    form.room.setCustomValidity("Room is full");
-    submit.click();
-  } else if (message.playerNumber != null) {
-    playerNumber = message.playerNumber;
-    lobby.hidden = true;
-    game.hidden = false;
-    window.requestAnimationFrame(frame);
-  }
-  if (message.ball) {
-    ballDx0 = message.ball.dx;
-    ballDy0 = message.ball.dy;
-    ballX0 = message.ball.x;
-    ballY0 = message.ball.y;
-    t0 = message.ball.timestamp;
-    s0 = message.ball.s;
-    stop = false;
-  }
-  if (message.score) {
-    score++;
-    stop = true;
-    ball.setAttribute("cx", message.score.x);
-    ball.setAttribute("cy", message.score.y);
-  }
-  if (message.paddle) {
-    otherPaddle = message.paddle;
-  }
-});
-
-function handleMove(clientY) {
-  let point = svg.createSVGPoint();
-  point.y = clientY;
-
-  paddle = Math.min(
-    475,
-    Math.max(25, point.matrixTransform(svg.getScreenCTM().inverse()).y)
-  );
-}
-
-function frame() {
-  for (let i = 0; i < 2; i++) {
-    if (i === playerNumber) {
-      players[i].setAttribute("y", paddle - 25);
-      scores[i].textContent = score;
-    } else {
-      players[i].setAttribute("y", otherPaddle - 25);
-      scores[i].textContent = otherScore;
-    }
-  }
-
-  if (!stop) {
-    const t = Date.now() - t0;
-
-    const s = s0 + t * 0.000002;
-    const ballX = ballX0 + t * ballDx0 * s;
-    const ballY =
-      485 -
-      Math.abs(((((ballY0 + t * ballDy0 * s - 15) % 940) + 940) % 940) - 470);
-
-    ball.setAttribute("cx", ballX);
-    ball.setAttribute("cy", ballY);
-
-    if (
-      playerNumber === 0 &&
-      ballDx0 < 0 &&
-      ballX - 15 <= 25 &&
-      ballY <= paddle + 25 &&
-      ballY >= paddle - 25
-    ) {
-      t0 = Date.now();
-      ballX0 = ballX;
-      ballY0 = ballY;
-      ballDx0 = Math.cos((paddle - ballY) / -20);
-      ballDy0 = Math.sin((paddle - ballY) / -20);
-      s0 = s;
-      socket.send(
-        JSON.stringify({
-          bounce: {
-            timestamp: t0,
-            x: ballX0,
-            y: ballY0,
-            dx: ballDx0,
-            dy: ballDy0,
-            s: s0,
-          },
-        })
-      );
-    } else if (
-      playerNumber === 1 &&
-      ballDx0 > 0 &&
-      ballX + 15 >= 475 &&
-      ballY <= paddle + 25 &&
-      ballY >= paddle - 25
-    ) {
-      t0 = Date.now();
-      ballX0 = ballX;
-      ballY0 = ballY;
-      ballDx0 = Math.cos((paddle - ballY) / 20 + Math.PI);
-      ballDy0 = Math.sin((paddle - ballY) / 20 + Math.PI);
-      s0 = s;
-      socket.send(
-        JSON.stringify({
-          bounce: {
-            timestamp: t0,
-            x: ballX0,
-            y: ballY0,
-            dx: ballDx0,
-            dy: ballDy0,
-            s: s0,
-          },
-        })
-      );
-    } else if (
-      (playerNumber === 0 && ballDx0 < 0 && ballX - 15 <= 0) ||
-      (playerNumber === 1 && ballDx0 > 0 && ballX + 15 >= 500)
-    ) {
-      otherScore++;
-      socket.send(JSON.stringify({ score: { x: ballX, y: ballY } }));
-      stop = true;
-    }
-  }
-
-  window.requestAnimationFrame(frame);
-  socket.send(JSON.stringify({ paddle }));
-}
