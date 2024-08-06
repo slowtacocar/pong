@@ -2,15 +2,27 @@
   "name": "pong",
   "version": "0.1.0",
   "private": true,
+  "dependencies": {
+    "express": "^4.17.1",
+    "socket.io": "^2.3.0"
+  },
+  "eslintConfig": {
+    "extends": [
+      "eslint:recommended",
+      "plugin:import/errors",
+      "plugin:import/warnings"
+    ],
+    "env": {
+      "es6": true,
+      "browser": true,
+      "node": true
+    }
+  },
   "scripts": {
-    "lint": "eslint ."
+    "start": "node server/index.js"
   },
   "devDependencies": {
-    "eslint": "^8.3.0"
-  },
-  "packageManager": "yarn@3.1.1",
-  "dependencies": {
-    "cors": "^2.8.5",
-    "pusher": "^5.0.0"
+    "eslint": "^7.19.0",
+    "eslint-plugin-import": "^2.22.1"
   }
 }
