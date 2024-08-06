@@ -24,5 +24,6 @@
   "devDependencies": {
     "eslint": "^7.19.0",
     "eslint-plugin-import": "^2.22.1"
-  }
+  },
+  "packageManager": "yarn@4.4.0"
 }

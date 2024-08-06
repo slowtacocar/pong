@@ -1,0 +1,65 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: pong
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pong
+  namespace: pong
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pong
+  template:
+    metadata:
+      labels:
+        app: pong
+    spec:
+      containers:
+      - name: nginx
+        image: cme-harbor.int.bobbygeorge.dev/pong/pong:1
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pong
+  namespace: pong
+spec:
+  ipFamilyPolicy: PreferDualStack
+  selector:
+    app: pong
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3000
+  type: ClusterIP
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: pong
+  namespace: pong
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - pong.bobbygeorge.dev
+    secretName: pong-bobbygeorge-dev
+  rules:
+  - host: pong.bobbygeorge.dev
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: pong
+            port: 
+              number: 80
